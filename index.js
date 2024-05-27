@@ -40,7 +40,7 @@ do{
                     continue;
                 }
                 else(total < 0);{
-                    total = total + eliminarItem
+                    total = total + eliminarItem;
                     itemNegativo();
                     break;
                 }
