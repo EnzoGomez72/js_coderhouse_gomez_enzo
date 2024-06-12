@@ -1,66 +1,107 @@
-let total = 0;
-let option;
+
 function itemNegativo(){
-    alert("El item no se encuentra en el carrito");
+    alert("Tu carrito esta vacio");
 }
 
+let carrito = [];
+
+class Producto {
+    constructor(nombre, precio, unidad) {
+        this.nombre = nombre;
+        this.precio = precio;
+        this.unidad = unidad;
+    }
+}
 
 do{
-    option = prompt(`Bienvenido a AVANTI, Ingrese el valor de la prenda a eleccion (Remera = 40000, Hoodie = 60000, Jean = 80000, gorra = 20000) dentro de las siguientes opciones:  
+    option = prompt(`Bienvenido a AVANTI, elija una de las siguientes opciones:  
     1. Añadir item al carrito
     2. eliminar item del carrito 
     3. Ver Total
     0. Vaciar y cerrar carrito`);
-
+    
     switch(option){
     case "1":
-        let item = Number(prompt("Ingresa el valor del item a añadir (Remera = 40000, Hoodie = 60000, Jean = 80000, gorra = 20000)"));
-        if((item == 20000) || (item == 40000) || (item == 60000) || (item == 80000)){
-            total = total + item;
-            alert("Item añadido al carrito correctamente.");
-            continue;
+        let nombre = prompt("Ingrese el item a añadir (Gorra, Remera, Hoodie, Jean) IMPORTANTE: El prompt es case sensitive");
+        if((nombre == "Gorra") || (nombre == "Remera") || (nombre == "Hoodie") || (nombre == "Jean")){
+            switch (nombre){
+                case "Gorra":
+                    precio = 20000;
+                    break;
+                case "Remera":
+                    precio = 40000;
+                    break;
+                    case "Hoodie":
+                    precio = 60000;
+                    break;
+                case "Jean":
+                    precio = 80000;
+                    break;
+                default:
+                    break;
+            }
+            let unidad = Number(prompt("Cuantas unidades quiere llevar?"));
+            if(unidad >= 1){
+                let producto = new Producto(nombre, precio, unidad);
+                carrito.push(producto);
+                alert("Item añadido correctamente");
+                continue;
+                }
+            else(unidad <= 0);{
+                alert("Ingrese una cantidad valida");
+                break;
+            }
         }
-        else((item != 20000) || (item != 40000) || (item != 60000) || (item != 80000));{
-            total = total - item + item;
-            alert('Item no disponible, porfavor añade otro item')
+        else((nombre != "Gorra") || (nombre != "Remera") || (nombre != "Hoodie") || (nombre != "Jean"));{
+            alert("Producto no disponible, porfavor añade otro item")
             break;
-    }
+        }
+
         case"2":
-        if(total == 0){
-            alert("Tu carrito esta vacio")
-            break;
-            
-        }
-        else{
-            let eliminarItem = Number(prompt("Ingresa el valor del item a eliminar (Remera = 40000, Hoodie = 60000, Jean = 80000, gorra = 20000)"));
-            if((eliminarItem == 20000) || (eliminarItem == 40000) || (eliminarItem == 60000) || (eliminarItem == 80000)) {
-                total = total - eliminarItem;
-                if(total >= 0){
-                    alert("Item eliminado correctamente del carrito");
+            if (carrito.length === 0) {
+                itemNegativo(); 
+                break;
+            }
+            else{
+                let eliminarProducto = "Lista de productos:\n";
+                carrito.forEach((producto, index) => {
+                    eliminarProducto = eliminarProducto + `${index + 1}.\n Producto: ${producto.nombre} \n Precio: $ ${producto.precio} \n Unidades: ${producto.unidad}\n`;
+                });
+                eliminarProducto = "\nIngrese el numero del producto a eliminar del carrito\n" + eliminarProducto;
+
+                let numeroProducto = Number(prompt(eliminarProducto));
+                if (!isNaN(numeroProducto) && (numeroProducto >= 1) && (numeroProducto <= carrito.length)){
+                    let index = numeroProducto - 1;
+                    carrito.splice(index, 1);
+                    alert("Producto eliminado correctamente del carrito");
                     continue;
                 }
-                else(total < 0);{
-                    total = total + eliminarItem;
+                else{
+                    alert("Ingrese un numero de producto valido");
+                    break;
+                }
+            }
+
+        case "3":
+                if (carrito.length === 0) {
                     itemNegativo();
                     break;
                 }
-        }
                 else{
-                    total = total + eliminarItem - eliminarItem;
-                    itemNegativo();
+                    let listaProducto = "Lista de productos:\n";
+                    carrito.forEach((producto, index) => {
+                        listaProducto = listaProducto + `${index + 1}.\n Producto: ${producto.nombre} \n Precio: $ ${producto.precio} \n Unidades: ${producto.unidad}\n`;
+                    });
+                    const total = carrito.reduce((acc, el) => acc + el.precio * el.unidad, 0);
+                    alert(`${listaProducto} \nEl total de tu compra es de $ ${total}`);
+                    break;
+                }
+
+            case "0":
+                alert("Tu carrito se ha vaciado por completo, hasta la proxima!")
                 break;
-        }
-        }
-
-        case "3":
-            alert("Tu total es de $" + total + ".");
-            break;
-
-        case "0":
-            alert("Tu carrito se ha vaciado por completo, hasta la proxima!")
-            break;
-        default:
-            alert("Ingrese una opcion valida")
-            break;
-            }
-    } while (option != 0)
+                default:
+                    alert("Ingrese una opcion valida")
+                    break;
+                }
+            } while (option != 0)
